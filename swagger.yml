@@ -1,0 +1,321 @@
+info:
+  description: A boilerplate for a Go Api
+  title: Boilerplate
+  version: 0.0.1
+consumes:
+  - application/json
+produces:
+  - application/json
+schemes:
+  - http
+swagger: "2.0"
+definitions:
+  post:
+    type: object
+    properties:
+      created_at:
+        type: string
+        format: datetime
+      updated_at:
+        type: string
+        format: datetime
+      id:
+        type: integer
+        minimum: 0
+      description:
+        type: string
+      user_id:
+        type: integer
+        minimum: 0
+
+
+  user:
+    type: object
+    properties:
+      created_at:
+        type: string
+        format: datetime
+      updated_at:
+        type: string
+        format: datetime
+      id:
+        type: integer
+        minimum: 0
+      email:
+        type: string
+      name:
+        type: string
+      age:
+        type: integer
+        minimum: 0
+      is_admin:
+        type: boolean
+      posts:
+        type: array
+        items:
+          $ref: "#/definitions/post"
+
+  not_found:
+    type: object
+    properties:
+      message:
+        type: string
+      code:
+        type: integer
+
+  error:
+    type: object
+    properties:
+      message:
+        type: string
+      code:
+        type: integer
+
+paths:
+  /posts:
+    get:
+      tags:
+        - posts
+      responses:
+        200:
+          description: all posts
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/post"
+        500:
+          description: error
+          schema:
+              $ref: "#/definitions/error"
+    post:
+      tags:
+        - posts
+      description: create a new post
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: post
+          description: new post to create
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+              user_id:
+                type: integer
+                minimum: 0
+      responses:
+        200:
+          description: the created post
+          schema:
+            $ref: "#/definitions/post"
+        500:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /posts/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: number
+        minimum: 0
+        required: true
+        description: Numeric ID of the post
+
+    get:
+      tags:
+        - posts
+      responses:
+        200:
+          description: get a post by id
+          schema:
+            $ref: "#/definitions/post"
+        404:
+          description: entity not found
+          schema:
+            $ref: "#/definitions/not_found"
+        500:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    put:
+      tags:
+        - posts
+      description: update an existing post
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: post
+          description: updated post
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+              user_id:
+                type: integer
+                minimum: 0
+      responses:
+        200:
+          description: the updated post
+          schema:
+            $ref: "#/definitions/post"
+        404:
+          description: entity not found
+          schema:
+            $ref: "#/definitions/not_found"
+        500:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    delete:
+      tags:
+        - posts
+      description: delete a post
+      consumes:
+        - application/json
+      responses:
+        200:
+          description: the deleted post
+          schema:
+            $ref: "#/definitions/post"
+        404:
+          description: entity not found
+          schema:
+            $ref: "#/definitions/not_found"
+        500:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+
+  /users:
+    get:
+      tags:
+        - users
+      responses:
+        200:
+          description: get all users
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/user"
+        500:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    post:
+      tags:
+        - users
+      description: create a new user
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: new user to create
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              name:
+                type: string
+              age:
+                type: integer
+                minimum: 0
+              is_admin:
+                type: boolean
+      responses:
+        200:
+          description: the created user
+          schema:
+            $ref: "#/definitions/user"
+        500:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: number
+        minimum: 0
+        required: true
+        description: Numeric ID of the user
+
+    get:
+      tags:
+        - users
+      responses:
+        200:
+          description: get a user by id
+          schema:
+            $ref: "#/definitions/user"
+        404:
+          description: entity not found
+          schema:
+            $ref: "#/definitions/not_found"
+
+        500:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    put:
+      tags:
+        - users
+      description: update an existing user
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: updates to the user
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              name:
+                type: string
+              age:
+                type: integer
+                minimum: 0
+              is_admin:
+                type: boolean
+      responses:
+        200:
+          description: the updated user
+          schema:
+            $ref: "#/definitions/user"
+
+        404:
+          description: entity not found
+          schema:
+            $ref: "#/definitions/not_found"
+        500:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    delete:
+      tags:
+        - users
+      description: delete a user
+      consumes:
+        - application/json
+      responses:
+        200:
+          description: the deleted user
+          schema:
+            $ref: "#/definitions/user"
+        404:
+          description: entity not found
+          schema:
+            $ref: "#/definitions/not_found"
+        500:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+
